@@ -67,3 +67,7 @@ Never commit real management keys, provider credentials, auth files, or other se
 Use Conventional Commits, such as `feat(providers): add a provider` or `fix(auth-files): preserve disabled actions`. Keep changes focused. Pull requests should include a summary, linked issue when applicable, backend version/reproduction details for integration work, UI screenshots or notes when relevant, and verification results.
 
 Maintain shared repository guidance in `AGENTS.md`. When updating it, synchronize the local `CLAUDE.md` to identical content if present; `CLAUDE.md` is currently ignored and untracked, so shared guidance must not depend on it. Keep guidance aligned with source and configuration rather than duplicating long implementation details.
+
+## Fork-local guidance (tokenmaxx)
+
+This is the `vivinmeth` fork. Also read `AGENTS.TMX.md` before making changes; it adds fork-only rules and overrides this file where they conflict.

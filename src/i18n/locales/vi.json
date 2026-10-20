@@ -214,7 +214,8 @@
     "ws_auth_enable": "Yêu cầu xác thực cho /ws/*",
     "routing_strategy_round_robin": "round-robin (luân phiên)",
     "routing_strategy_weighted_round_robin": "weighted-round-robin (luân phiên có trọng số)",
-    "routing_strategy_fill_first": "fill-first (ưu tiên lấp đầy)"
+    "routing_strategy_fill_first": "fill-first (ưu tiên lấp đầy)",
+    "routing_strategy_reset_soonest": "reset-soonest (ưu tiên đặt lại sớm nhất)"
   },
   "auth_files": {
     "title": "Quản lý File xác thực",
@@ -1221,10 +1222,11 @@
           "gpt_image_2_base_model": "Model gốc GPT Image 2",
           "gpt_image_2_base_model_hint": "Model chính dùng khi proxy yêu cầu ảnh gpt-image-2; backend dùng mặc định nếu trống hoặc không hợp lệ",
           "routing_strategy": "Chiến lược định tuyến",
-          "routing_strategy_hint": "Chọn chiến lược lựa chọn credential",
+          "routing_strategy_hint": "Chọn chiến lược lựa chọn credential; ưu tiên đặt lại sớm nhất sẽ dùng trước tài khoản có hạn mức tuần được đặt lại sớm nhất",
           "strategy_round_robin": "Round Robin",
           "strategy_weighted_round_robin": "Weighted Round Robin",
           "strategy_fill_first": "Fill First",
+          "strategy_reset_soonest": "Ưu tiên đặt lại sớm nhất",
           "session_affinity_ttl": "TTL Session Affinity",
           "force_model_prefix": "Bắt buộc tiền tố model",
           "force_model_prefix_desc": "Yêu cầu model không có tiền tố chỉ dùng credential không có tiền tố",

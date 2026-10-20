@@ -214,7 +214,8 @@
     "ws_auth_enable": "Require auth for /ws/*",
     "routing_strategy_round_robin": "round-robin (cycle)",
     "routing_strategy_weighted_round_robin": "weighted-round-robin (weighted cycle)",
-    "routing_strategy_fill_first": "fill-first (prioritize)"
+    "routing_strategy_fill_first": "fill-first (prioritize)",
+    "routing_strategy_reset_soonest": "reset-soonest (weekly reset soonest first)"
   },
   "auth_files": {
     "title": "Auth Files Management",
@@ -1431,10 +1432,11 @@
           "gpt_image_2_base_model": "GPT Image 2 Base Model",
           "gpt_image_2_base_model_hint": "Mainline model used when proxying gpt-image-2 image requests; backend uses its default when empty or invalid",
           "routing_strategy": "Routing Strategy",
-          "routing_strategy_hint": "Select credential selection strategy",
+          "routing_strategy_hint": "Select credential selection strategy; reset soonest first uses the account whose weekly quota resets soonest",
           "strategy_round_robin": "Round Robin",
           "strategy_weighted_round_robin": "Weighted Round Robin",
           "strategy_fill_first": "Fill First",
+          "strategy_reset_soonest": "Reset soonest first",
           "session_affinity_ttl": "Session Affinity TTL",
           "force_model_prefix": "Force Model Prefix",
           "force_model_prefix_desc": "Unprefixed model requests only use credentials without prefix",

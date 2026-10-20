@@ -35,6 +35,10 @@ export function SectionNetwork({
       value: 'fill-first',
       label: t('config_management.visual.sections.network.strategy_fill_first'),
     },
+    {
+      value: 'reset-soonest',
+      label: t('config_management.visual.sections.network.strategy_reset_soonest'),
+    },
   ];
 
   const disableImageGenerationOptions: Array<{ value: DisableImageGeneration; label: string }> = [

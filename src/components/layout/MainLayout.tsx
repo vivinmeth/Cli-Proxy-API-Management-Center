@@ -1158,11 +1158,11 @@ export function MainLayout() {
               <img src={BRAND_LOGO} alt={`${BRAND_NAME} logo`} className="sidebar-brand-logo" />
               {showSidebarLabels && (
                 <span className="sidebar-brand-text">
-                  <span className="sidebar-brand-title-row">
-                    <span className="sidebar-brand-title">{abbrBrandName}</span>
+                  <span className="sidebar-brand-title">{abbrBrandName}</span>
+                  <span className="sidebar-brand-subtitle-row">
+                    <span className="sidebar-brand-subtitle">{BRAND_TAGLINE}</span>
                     <EnvPill />
                   </span>
-                  <span className="sidebar-brand-subtitle">{BRAND_TAGLINE}</span>
                 </span>
               )}
             </div>

@@ -27,6 +27,9 @@ const PORT_ENV: Record<string, DeployEnv> = {
   '5173': 'dev',
   '8318': 'prod',
   '8319': 'staging',
+  // tailnet HTTPS via `tailscale serve` (443 is taken by Dokploy's Traefik)
+  '8443': 'prod',
+  '9443': 'staging',
 };
 
 /**

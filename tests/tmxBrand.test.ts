@@ -14,6 +14,8 @@ describe('tokenmaxx brand', () => {
     ['http://alien.tail3aa7d9.ts.net:8318', 'prod'],
     ['http://staging.tmx-proxy.alien.vin', 'staging'],
     ['alien.vin:8319', 'staging'],
+    ['https://alien.tail3aa7d9.ts.net:8443', 'prod'],
+    ['https://alien.tail3aa7d9.ts.net:9443', 'staging'],
     ['alien.vin:8317', 'dev'],
     ['http://localhost:5173', 'dev'],
     ['http://127.0.0.1', 'dev'],

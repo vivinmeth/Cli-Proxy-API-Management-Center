@@ -30,6 +30,11 @@ T3 project exist but are **parked**. Don't work there; see `../wiki/parked-fork-
   Fable and other model-scoped buckets sit in the collapsed extras.
 - **Request History** page (`src/tmx/requests/`, route `/requests`, Observe group): reads the
   backend's `/v8/management/tmx/requests*`. Strings under `tmx_requests.*` in all 6 locales.
+- **Reset credits** on the Ledger (`src/tmx/resets/`: summary cell, pending-resets timeline, row
+  chip + drawer, confirm dialog): reads `/v8/management/tmx/resets`, renders nothing when the
+  backend lacks it. `QuotaLedger.tsx` only carries the mount points. Strings under `tmx_resets.*`
+  in all 6 locales; logic tests in `tests/tmxResets.test.ts`. Cards view keeps upstream's reset UI.
+  Details: `../wiki/reset-credits.md`.
 - Details: `../wiki/ui-ledger-and-releases.md`, `../wiki/observability-plan.md`.
 
 ## Git

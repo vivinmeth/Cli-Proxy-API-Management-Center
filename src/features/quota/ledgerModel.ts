@@ -54,7 +54,7 @@ const WEEK_HOURS = 24 * 7;
  * strip aggregates this window; rows put it in the first column.
  */
 export const LEDGER_PRIMARY_PREFERENCE: Partial<Record<QuotaProviderType, readonly string[]>> = {
-  claude: ['seven-day-fable', 'seven-day'],
+  claude: ['five-hour', 'seven-day', 'seven-day-fable'],
   codex: ['weekly', 'monthly'],
   xai: ['weekly', 'monthly'],
   kimi: ['summary', 'monthly'],
@@ -68,6 +68,20 @@ export const LEDGER_PRIMARY_PREFERENCE: Partial<Record<QuotaProviderType, readon
  */
 export const LEDGER_HIDDEN_LIMITS: Partial<Record<QuotaProviderType, readonly string[]>> = {
   claude: ['seven-day-opus'],
+};
+
+/**
+ * Providers whose summary card leads with several windows side by side instead
+ * of one. Claude's 5-hour and general 7-day limits are what cap everyday Opus
+ * use; model-scoped buckets like Fable drop into the collapsed extras.
+ */
+export const LEDGER_HEADLINE_WINDOWS: Partial<
+  Record<QuotaProviderType, readonly { id: string; labelKey: string }[]>
+> = {
+  claude: [
+    { id: 'five-hour', labelKey: 'claude_quota.five_hour' },
+    { id: 'seven-day', labelKey: 'claude_quota.seven_day' },
+  ],
 };
 
 /** Label shown for a provider's headline window before anything has loaded. */
@@ -352,7 +366,9 @@ export interface LedgerProviderSummary {
   provider: QuotaProviderType;
   credentialCount: number;
   primary: LedgerWindowSummary;
-  /** Other long (≥ 1 day) windows, e.g. Claude's 7-day limit under Fable. */
+  /** Windows shown side by side at the top of the card; `primary` alone unless configured. */
+  headline: LedgerWindowSummary[];
+  /** Other long (≥ 1 day) windows, e.g. Claude's 7-day Fable bucket. */
   secondary: LedgerWindowSummary[];
 }
 
@@ -417,12 +433,19 @@ export function buildProviderSummary(
     LEDGER_DEFAULT_PRIMARY_LABEL_KEY[provider] ?? 'quota_management.ledger_primary_window',
     nowMs
   );
+  const headlineWindows = LEDGER_HEADLINE_WINDOWS[provider];
+  const headline = headlineWindows
+    ? headlineWindows.map(({ id, labelKey }) =>
+        summarizeWindow(id, limitsPerCredential, labelKey, nowMs)
+      )
+    : [primary];
+  const headlineIds = new Set(headline.map((window) => window.id));
 
   // Other long windows, ordered by the provider's preference, then by length.
   const preference = LEDGER_PRIMARY_PREFERENCE[provider] ?? [];
   const seen = new Map<string, { periodHours: number; order: number }>();
   limitsPerCredential.flat().forEach((limit) => {
-    if (limit.id === primaryId || seen.has(limit.id)) return;
+    if (headlineIds.has(limit.id) || seen.has(limit.id)) return;
     if (limit.periodHours === null || limit.periodHours < DAY_HOURS) return;
     seen.set(limit.id, { periodHours: limit.periodHours, order: seen.size });
   });
@@ -437,7 +460,7 @@ export function buildProviderSummary(
     )
     .map(([id]) => summarizeWindow(id, limitsPerCredential, undefined, nowMs));
 
-  return { provider, credentialCount: quotas.length, primary, secondary };
+  return { provider, credentialCount: quotas.length, primary, headline, secondary };
 }
 
 /**

@@ -155,7 +155,6 @@ function SummaryCard({
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const providerLabel = getTypeLabel(t, summary.provider);
-  const primaryLabel = labelOf(t, summary.primary);
   const [firstSecondary, ...moreSecondary] = summary.secondary;
   const detailsId = `quota-ledger-summary-${summary.provider}`;
 
@@ -172,16 +171,25 @@ function SummaryCard({
           {t('quota_management.ledger_credentials', { count: summary.credentialCount })}
         </span>
       </header>
-      <div className={styles.summaryLabel}>{primaryLabel}</div>
-      <div className={styles.summaryFigure}>
-        <span className={styles.summaryValue}>{formatPercent(summary.primary.totalRemaining)}</span>
-        <span className={styles.summaryCapacity}>
-          {t('quota_management.ledger_of_capacity', { capacity: summary.primary.capacity })}
-        </span>
-      </div>
-      <SegmentBar window={summary.primary} label={primaryLabel} />
-      <div className={styles.summaryReset}>
-        <ResetText atMs={summary.primary.soonestResetMs} now={now} emphasize />
+      <div className={styles.summaryHeadline}>
+        {summary.headline.map((window) => {
+          const label = labelOf(t, window);
+          return (
+            <div key={window.id ?? label} className={styles.summaryWindow}>
+              <div className={styles.summaryLabel}>{label}</div>
+              <div className={styles.summaryFigure}>
+                <span className={styles.summaryValue}>{formatPercent(window.totalRemaining)}</span>
+                <span className={styles.summaryCapacity}>
+                  {t('quota_management.ledger_of_capacity', { capacity: window.capacity })}
+                </span>
+              </div>
+              <SegmentBar window={window} label={label} />
+              <div className={styles.summaryReset}>
+                <ResetText atMs={window.soonestResetMs} now={now} emphasize />
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {firstSecondary && (

@@ -125,34 +125,45 @@ describe('buildProviderSummary', () => {
     );
 
     expect(summary.credentialCount).toBe(4);
-    expect(summary.primary.id).toBe('seven-day-fable');
-    expect(summary.primary.labelKey).toBe('claude_quota.seven_day_fable');
-    expect(summary.primary.totalRemaining).toBe(58 + 100 + 20);
-    expect(summary.primary.capacity).toBe(400);
-    expect(summary.primary.segments.map((segment) => segment.level)).toEqual([
+    const fable = summary.secondary.find((window) => window.id === 'seven-day-fable')!;
+    expect(fable.labelKey).toBe('claude_quota.seven_day_fable');
+    expect(fable.totalRemaining).toBe(58 + 100 + 20);
+    expect(fable.capacity).toBe(400);
+    expect(fable.segments.map((segment) => segment.level)).toEqual([
       'medium',
       'high',
       'low',
       'unknown',
     ]);
     // The already-passed reset on the third credential is not "soonest".
-    expect(summary.primary.soonestResetMs).toBe(NOW + DAY);
+    expect(fable.soonestResetMs).toBe(NOW + DAY);
   });
 
-  test('lists other long windows as secondary, without Opus or short windows', () => {
+  test('leads Claude with the 5-hour and general 7-day limits, Fable collapsed', () => {
     const summary = buildProviderSummary(
       'claude',
-      [claudeQuota({ fable: 10, sevenDay: 20, resetAtMs: NOW + DAY })],
+      [claudeQuota({ fable: 10, sevenDay: 20, fiveHour: 30, resetAtMs: NOW + DAY })],
       NOW
     );
-    expect(summary.secondary.map((window) => window.id)).toEqual(['seven-day']);
-    expect(summary.secondary[0].totalRemaining).toBe(80);
+    expect(summary.headline.map((window) => window.id)).toEqual(['five-hour', 'seven-day']);
+    expect(summary.headline.map((window) => window.totalRemaining)).toEqual([70, 80]);
+    expect(summary.secondary.map((window) => window.id)).toEqual(['seven-day-fable']);
+    expect(summary.secondary[0].totalRemaining).toBe(90);
   });
 
-  test('falls back to the 7-day window when no credential reports Fable', () => {
-    const summary = buildProviderSummary('claude', [claudeQuota({ sevenDay: 40 })], NOW);
-    expect(summary.primary.id).toBe('seven-day');
-    expect(summary.primary.totalRemaining).toBe(60);
+  test('keeps both Claude headline windows labelled before anything loads', () => {
+    const summary = buildProviderSummary('claude', [undefined], NOW);
+    expect(summary.headline.map((window) => window.labelKey)).toEqual([
+      'claude_quota.five_hour',
+      'claude_quota.seven_day',
+    ]);
+    expect(summary.headline.every((window) => window.totalRemaining === null)).toBe(true);
+    expect(summary.secondary).toEqual([]);
+  });
+
+  test('other providers lead with their single primary window', () => {
+    const summary = buildProviderSummary('codex', [undefined], NOW);
+    expect(summary.headline).toEqual([summary.primary]);
   });
 
   test('reports unknown rather than zero when nothing is loaded', () => {
@@ -216,9 +227,11 @@ describe('buildProviderSummary', () => {
 describe('ledger rows', () => {
   test('put the headline window first, then the provider order, without Opus', () => {
     const limits = extractLedgerLimits('claude', claudeQuota({ fable: 49, sevenDay: 25 }));
-    const columns = selectRowLimits('claude', limits, 'seven-day-fable');
-    expect(columns.map((limit) => limit.id)).toEqual(['seven-day-fable', 'five-hour', 'seven-day']);
-    expect(columns[0].remaining).toBe(51);
+    const primaryId = resolvePrimaryLimitId('claude', [limits]);
+    expect(primaryId).toBe('five-hour');
+    const columns = selectRowLimits('claude', limits, primaryId);
+    expect(columns.map((limit) => limit.id)).toEqual(['five-hour', 'seven-day', 'seven-day-fable']);
+    expect(columns[2].remaining).toBe(51);
   });
 
   test('unloaded credentials have no limits', () => {

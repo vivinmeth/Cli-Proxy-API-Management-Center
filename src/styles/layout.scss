@@ -514,6 +514,13 @@
     line-height: 1.15;
   }
 
+  .sidebar-brand-title-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+  }
+
   .sidebar-brand-title {
     min-width: 0;
     overflow: hidden;

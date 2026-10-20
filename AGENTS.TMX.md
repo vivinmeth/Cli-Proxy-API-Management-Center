@@ -21,6 +21,13 @@ T3 project exist but are **parked**. Don't work there; see `../wiki/parked-fork-
 - Ledger quota view (the default view on Quota Management): `src/features/quota/`,
   `ledgerModel.ts`, `emailMask.ts`.
 - `reset-soonest` option in the Config Panel routing strategy, in all 6 locales.
+- **TokenMAXX Proxy branding + environment pill**: everything lives in `src/tmx/` (`brand.ts` =
+  name, inline SVG logo, `resolveDeployEnv`; `EnvPill.tsx`; `useEnvDocumentTitle.ts`). Call sites
+  (`MainLayout`, `LoginPage`, `SystemPage`, `main.tsx`) only import from there. The pill reflects
+  the **API base being managed**, not the page origin (dev UI → prod backend says PROD). Product
+  names are not translated; upstream's "CLI Proxy API" strings that refer to the backend stay.
+- Claude summary card leads with the 5-hour + general 7-day windows (`LEDGER_HEADLINE_WINDOWS`);
+  Fable and other model-scoped buckets sit in the collapsed extras.
 - Details: `../wiki/ui-ledger-and-releases.md`.
 
 ## Git

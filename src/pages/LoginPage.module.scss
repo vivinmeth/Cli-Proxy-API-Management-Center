@@ -157,6 +157,9 @@
 
 // 标题
 .title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 22px;
   font-weight: 800;
   color: var(--text-primary);

@@ -1,22 +1,22 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@/styles/global.scss';
-import { INLINE_LOGO_JPEG } from '@/assets/logoInline';
+import { BRAND_LOGO, BRAND_NAME } from '@/tmx/brand';
 import App from './App.tsx';
 
-document.title = 'CLI Proxy API Management Center';
+document.title = BRAND_NAME;
 document.documentElement.setAttribute('translate', 'no');
 document.documentElement.classList.add('notranslate');
 
 const faviconEl = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
 if (faviconEl) {
-  faviconEl.href = INLINE_LOGO_JPEG;
+  faviconEl.href = BRAND_LOGO;
   faviconEl.type = 'image/jpeg';
 } else {
   const newFavicon = document.createElement('link');
   newFavicon.rel = 'icon';
   newFavicon.type = 'image/jpeg';
-  newFavicon.href = INLINE_LOGO_JPEG;
+  newFavicon.href = BRAND_LOGO;
   document.head.appendChild(newFavicon);
 }
 

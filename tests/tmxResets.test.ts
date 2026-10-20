@@ -1,22 +1,17 @@
 import { describe, expect, it } from 'bun:test';
-import type { ResetAccount } from '../src/tmx/resets/api';
-import {
-  DAY_MS,
-  HOUR_MS,
-  buildTimeline,
-  creditVerdict,
-  spendableCredit,
-  summarize,
-} from '../src/tmx/resets/model';
+import type { ResetAccount, ResetsResponse } from '../src/tmx/resets/api';
+import { DAY_MS, buildTimeline, creditVerdict, summaryOf } from '../src/tmx/resets/model';
 
 const NOW = Date.parse('2026-10-20T17:00:00Z');
 const iso = (offsetMs: number) => new Date(NOW + offsetMs).toISOString();
 
-const claude = (overrides: Partial<ResetAccount> = {}): ResetAccount => ({
+// Shapes as returned by GET /v8/management/tmx/resets (verdicts are server-computed).
+const claude = (): ResetAccount => ({
   auth_id: 'claude-1',
   auth_index: 'idx-claude',
   provider: 'claude',
   label: 'claude@example.com',
+  plan: 'max_20x',
   checked_at: iso(0),
   eligible: true,
   at_limit: false,
@@ -31,10 +26,31 @@ const claude = (overrides: Partial<ResetAccount> = {}): ResetAccount => ({
       expires_at: iso(2 * DAY_MS),
       clears: ['5h', '7d', '7d_oi'],
       resets_left: 1,
+      verdict: {
+        kind: 'use_or_lose',
+        gains: [
+          { window: '5h', used_pct: 9 },
+          { window: '7d', used_pct: 6 },
+        ],
+        total_gain: 15,
+        refill_at: iso(6.6 * DAY_MS),
+        lapses_before_refill: true,
+        lapses_soon: true,
+        spendable: true,
+      },
     },
   ],
   next_credit_id: 'launch',
-  ...overrides,
+});
+
+const nothing = (spendable: boolean, lapses: boolean) => ({
+  kind: 'nothing' as const,
+  gains: [],
+  total_gain: 0,
+  refill_at: iso(6.8 * DAY_MS),
+  lapses_before_refill: lapses,
+  lapses_soon: lapses,
+  spendable,
 });
 
 const codex = (): ResetAccount => ({
@@ -42,6 +58,7 @@ const codex = (): ResetAccount => ({
   auth_index: 'idx-codex',
   provider: 'codex',
   label: 'codex@example.com',
+  plan: 'prolite',
   checked_at: iso(0),
   eligible: true,
   at_limit: false,
@@ -49,20 +66,13 @@ const codex = (): ResetAccount => ({
   windows: [{ window: '7d', used_pct: 0, resets_at: iso(6.8 * DAY_MS) }],
   credits: [
     {
-      id: 'c3',
-      title: 'Full reset',
-      expires_at: iso(17 * DAY_MS),
-      clears: ['7d'],
-      resets_left: 1,
-      warning: 'nothing_to_clear',
-    },
-    {
       id: 'c1',
       title: 'Full reset',
       expires_at: iso(2.1 * DAY_MS),
       clears: ['7d'],
       resets_left: 1,
       warning: 'nothing_to_clear',
+      verdict: nothing(true, true),
     },
     {
       id: 'c2',
@@ -71,14 +81,24 @@ const codex = (): ResetAccount => ({
       clears: ['7d'],
       resets_left: 1,
       warning: 'nothing_to_clear',
+      verdict: nothing(false, false),
+    },
+    {
+      id: 'c3',
+      title: 'Full reset',
+      expires_at: iso(17 * DAY_MS),
+      clears: ['7d'],
+      resets_left: 1,
+      warning: 'nothing_to_clear',
+      verdict: nothing(false, false),
     },
   ],
 });
 
-describe('creditVerdict', () => {
-  it('flags use-it-or-lose-it when a credit expires before the cleared windows refill', () => {
-    const a = claude();
-    const v = creditVerdict(a, a.credits[0], NOW);
+describe('creditVerdict (server verdict adapter)', () => {
+  it('maps the backend verdict to the UI shape', () => {
+    const credit = claude().credits[0];
+    const v = creditVerdict(credit);
     expect(v.kind).toBe('use_or_lose');
     expect(v.gains).toEqual([
       { window: '5h', usedPct: 9 },
@@ -87,101 +107,68 @@ describe('creditVerdict', () => {
     expect(v.totalGain).toBe(15);
     expect(v.lapsesBeforeRefill).toBe(true);
     expect(v.spendable).toBe(true);
+    expect(v.expiresAtMs).toBe(NOW + 2 * DAY_MS);
+    expect(v.refillAtMs).toBe(NOW + 6.6 * DAY_MS);
   });
 
-  it('says use now when a cleared window is exhausted and far from refilling', () => {
-    const a = claude({
-      windows: [
-        { window: '5h', used_pct: 40, resets_at: iso(2 * HOUR_MS) },
-        { window: '7d', used_pct: 100, resets_at: iso(5 * DAY_MS) },
-      ],
-    });
-    expect(creditVerdict(a, a.credits[0], NOW).kind).toBe('use_now');
-  });
-
-  it('does not say use now when the exhausted window refills within 12 hours', () => {
-    const a = claude({
-      windows: [{ window: '7d', used_pct: 100, resets_at: iso(3 * HOUR_MS) }],
-      credits: [
-        { id: 'x', title: 'x', expires_at: iso(10 * DAY_MS), clears: ['7d'], resets_left: 1 },
-      ],
-    });
-    expect(creditVerdict(a, a.credits[0], NOW).kind).toBe('hold');
-  });
-
-  it('reports nothing to clear for Codex credits OpenAI says are not applicable', () => {
-    const a = codex();
-    const v = creditVerdict(a, a.credits[1], NOW);
+  it('carries blocker and warning from the credit', () => {
+    const credit = codex().credits[0];
+    const v = creditVerdict(credit);
     expect(v.kind).toBe('nothing');
-    expect(v.lapsesBeforeRefill).toBe(true);
+    expect(v.warning).toBe('nothing_to_clear');
   });
 
-  it('targets only the soonest-expiring usable credit', () => {
-    const a = codex();
-    expect(spendableCredit(a)?.id).toBe('c1');
-    expect(creditVerdict(a, a.credits[0], NOW).spendable).toBe(false);
-  });
-
-  it('skips blocked credits when choosing what to spend, and reports the blocker', () => {
-    const a = claude({
-      credits: [
-        {
-          id: 'early',
-          title: 'e',
-          expires_at: iso(DAY_MS),
-          clears: ['5h'],
-          resets_left: 1,
-          blocker: 'not_limited',
-        },
-        { id: 'late', title: 'l', expires_at: iso(5 * DAY_MS), clears: ['5h'], resets_left: 1 },
-      ],
-    });
-    expect(spendableCredit(a)?.id).toBe('late');
-    const v = creditVerdict(a, a.credits[0], NOW);
-    expect(v.kind).toBe('blocked');
-    expect(v.blocker).toBe('not_limited');
-  });
-
-  it('shows a pending claim as retryable even when the credit is blocked now', () => {
-    const a = claude();
-    a.credits[0].blocker = 'exhausted';
-    a.pending = {
-      id: 1,
-      created_at: iso(-60_000),
-      auth_id: 'claude-1',
-      provider: 'claude',
-      label: '',
-      credit_id: 'launch',
-      credit_title: '',
-      state: 'pending',
-      outcome: 'unknown',
-      confirmed: false,
-      before: [],
-      after: [],
-    };
-    expect(creditVerdict(a, a.credits[0], NOW).kind).toBe('pending');
+  it('treats a credit without a verdict (older backend) as hold and not spendable', () => {
+    const credit = { ...claude().credits[0], verdict: undefined };
+    const v = creditVerdict(credit);
+    expect(v.kind).toBe('hold');
+    expect(v.spendable).toBe(false);
   });
 });
 
-describe('summarize', () => {
-  it('counts banked credits, those lapsing within 3 days, and the next expiry', () => {
-    const s = summarize([claude(), codex()], NOW);
+describe('summaryOf', () => {
+  it('reads the server summary', () => {
+    const data: ResetsResponse = {
+      enabled: true,
+      accounts: [claude(), codex()],
+      history: [],
+      summary: {
+        banked: 4,
+        lapse_soon: 2,
+        accounts_with_credits: 2,
+        pending: 0,
+        next_expiry: {
+          at: iso(2 * DAY_MS),
+          auth_id: 'claude-1',
+          provider: 'claude',
+          credit_id: 'launch',
+        },
+      },
+    };
+    const s = summaryOf(data);
     expect(s.banked).toBe(4);
     expect(s.lapseSoon).toBe(2);
-    expect(s.accountsWithCredits).toBe(2);
-    expect(s.nextExpiry?.provider).toBe('claude');
+    expect(s.nextExpiry).toEqual({
+      atMs: NOW + 2 * DAY_MS,
+      provider: 'claude',
+      authId: 'claude-1',
+    });
   });
 
-  it('ignores expired credits', () => {
-    const a = claude();
-    a.credits[0].blocker = 'expired';
-    expect(summarize([a], NOW).banked).toBe(0);
+  it('is empty without data', () => {
+    expect(summaryOf(null)).toEqual({
+      banked: 0,
+      lapseSoon: 0,
+      accountsWithCredits: 0,
+      pending: 0,
+      nextExpiry: null,
+    });
   });
 });
 
 describe('buildTimeline', () => {
   it('returns null when no account has credits', () => {
-    expect(buildTimeline([claude({ credits: [] })], NOW)).toBeNull();
+    expect(buildTimeline([{ ...claude(), credits: [] }], NOW)).toBeNull();
   });
 
   it('draws refills, credit lifetimes, expiries and a waste span for a low-value lapsing credit', () => {
@@ -196,11 +183,14 @@ describe('buildTimeline', () => {
     expect(types).toContain('waste');
     expect(types).toContain('expiry');
     const codexRow = t.rows.find((r) => r.account.provider === 'codex');
-    const expiries = codexRow?.markers.filter((m) => m.type === 'expiry') ?? [];
-    expect(expiries).toHaveLength(3);
+    expect(codexRow?.markers.filter((m) => m.type === 'expiry')).toHaveLength(3);
     // Weekly refills repeat across the axis; the 5-hour window is too dense to draw.
-    const refills = codexRow?.markers.filter((m) => m.type === 'refill') ?? [];
-    expect(refills.length).toBeGreaterThanOrEqual(2);
+    expect(codexRow?.markers.filter((m) => m.type === 'refill').length).toBeGreaterThanOrEqual(2);
     expect(claudeRow?.markers.some((m) => m.type === 'refill' && m.window === '5h')).toBe(false);
+  });
+
+  it('keeps the first tick clear of the "now" label', () => {
+    const t = buildTimeline([claude()], NOW);
+    expect(t?.ticks.every((tick) => tick - NOW >= (t.endMs - NOW) * 0.08)).toBe(true);
   });
 });

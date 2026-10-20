@@ -1,25 +1,18 @@
 /**
- * Pure logic for the reset-credit UI: what spending a credit now returns, whether it will lapse
- * before the windows it clears refill on their own, and the timeline geometry.
+ * Reset-credit UI logic. Recommendations (verdicts) and the summary come from the backend
+ * (/tmx/resets, internal/tmx/resets/verdict.go) so fleet and this UI always agree; this file only
+ * adapts them and computes the timeline geometry.
  */
-import type { ResetAccount, ResetCredit, ResetWindow } from './api';
+import type { ResetAccount, ResetCredit, ResetsResponse } from './api';
 
 export const HOUR_MS = 3_600_000;
 export const DAY_MS = 24 * HOUR_MS;
-/** A credit expiring within this is flagged "lapses soon". */
+/** A credit expiring within this is flagged "lapses soon" (matches the backend). */
 export const LAPSE_SOON_MS = 72 * HOUR_MS;
-/** A blocked account whose natural refill is further away than this should spend now. */
-export const USE_NOW_MIN_WAIT_MS = 12 * HOUR_MS;
 /** Spending below this much total return is "low value". */
 export const LOW_VALUE_PCT = 25;
 
-export type VerdictKind =
-  | 'blocked' // provider refuses it now (credit.blocker)
-  | 'pending' // an earlier claim got no definite answer; retry reuses its id
-  | 'use_now' // a cleared window is exhausted and won't refill for a while
-  | 'use_or_lose' // something to clear, and it expires before the cleared windows refill
-  | 'nothing' // nothing to clear right now
-  | 'hold'; // outlives the next refill: keep it
+export type VerdictKind = 'blocked' | 'pending' | 'use_now' | 'use_or_lose' | 'nothing' | 'hold';
 
 export interface WindowGain {
   window: string;
@@ -36,7 +29,7 @@ export interface Verdict {
   expiresAtMs: number | null;
   /** Latest natural refill among the cleared windows. */
   refillAtMs: number | null;
-  /** The credit the spend button targets for this account. */
+  /** The credit a redeem should target for this account. */
   spendable: boolean;
   blocker?: string;
   warning?: string;
@@ -50,92 +43,43 @@ const ms = (iso: string | null | undefined): number | null => {
 
 export const expiresAtMs = (credit: ResetCredit) => ms(credit.expires_at);
 
-const clearedWindows = (account: ResetAccount, credit: ResetCredit): ResetWindow[] => {
-  const clears = new Set(credit.clears);
-  return account.windows.filter((w) => clears.size === 0 || clears.has(w.window));
-};
-
-/** Soonest-expiring credit without a hard blocker; ties go to the provider's recommendation. */
-export function spendableCredit(account: ResetAccount): ResetCredit | undefined {
-  const usable = account.credits.filter((c) => !c.blocker);
-  if (usable.length === 0) return undefined;
-  const sorted = [...usable].sort((a, b) => {
-    const ea = expiresAtMs(a) ?? Number.POSITIVE_INFINITY;
-    const eb = expiresAtMs(b) ?? Number.POSITIVE_INFINITY;
-    if (ea !== eb) return ea - eb;
-    if (a.id === account.next_credit_id) return -1;
-    if (b.id === account.next_credit_id) return 1;
-    return a.id < b.id ? -1 : 1;
-  });
-  return sorted[0];
-}
-
-export function creditVerdict(account: ResetAccount, credit: ResetCredit, now: number): Verdict {
-  const windows = clearedWindows(account, credit);
-  const gains = windows
-    .filter((w) => (w.used_pct ?? 0) > 0)
-    .map((w) => ({ window: w.window, usedPct: Math.round(w.used_pct ?? 0) }));
-  const totalGain = gains.reduce((sum, g) => sum + g.usedPct, 0);
-  const refills = windows
-    .map((w) => ms(w.resets_at))
-    .filter((v): v is number => v !== null && v > now);
-  const refillAtMs = refills.length > 0 ? Math.max(...refills) : null;
-  const expires = expiresAtMs(credit);
-  const lapsesBeforeRefill = expires !== null && refillAtMs !== null && expires < refillAtMs;
-  const spendable = spendableCredit(account)?.id === credit.id;
-  const base = {
-    gains,
-    totalGain,
-    lapsesBeforeRefill,
-    expiresAtMs: expires,
-    refillAtMs,
-    spendable,
+/** The backend's verdict for a credit; a credit without one (older backend) is shown as hold. */
+export function creditVerdict(credit: ResetCredit): Verdict {
+  const v = credit.verdict;
+  return {
+    kind: v?.kind ?? 'hold',
+    gains: (v?.gains ?? []).map((g) => ({ window: g.window, usedPct: g.used_pct })),
+    totalGain: v?.total_gain ?? 0,
+    lapsesBeforeRefill: v?.lapses_before_refill ?? false,
+    expiresAtMs: expiresAtMs(credit),
+    refillAtMs: ms(v?.refill_at),
+    spendable: v?.spendable ?? false,
     blocker: credit.blocker,
     warning: credit.warning,
   };
-
-  if (account.pending && account.pending.credit_id === credit.id)
-    return { ...base, kind: 'pending' };
-  if (credit.blocker) return { ...base, kind: 'blocked' };
-  if (totalGain === 0 || credit.warning === 'nothing_to_clear') return { ...base, kind: 'nothing' };
-  const exhausted = windows.some((w) => {
-    const reset = ms(w.resets_at);
-    return (w.used_pct ?? 0) >= 99 && (reset === null || reset - now > USE_NOW_MIN_WAIT_MS);
-  });
-  if (exhausted) return { ...base, kind: 'use_now' };
-  if (lapsesBeforeRefill) return { ...base, kind: 'use_or_lose' };
-  return { ...base, kind: 'hold' };
 }
 
 export interface ResetsSummary {
   banked: number;
   lapseSoon: number;
-  nextExpiry: { atMs: number; provider: string; label: string } | null;
+  nextExpiry: { atMs: number; provider: string; authId: string } | null;
   accountsWithCredits: number;
   pending: number;
 }
 
-export function summarize(accounts: ResetAccount[], now: number): ResetsSummary {
-  let banked = 0;
-  let lapseSoon = 0;
-  let accountsWithCredits = 0;
-  let pending = 0;
-  let nextExpiry: ResetsSummary['nextExpiry'] = null;
-  for (const account of accounts) {
-    if (account.pending) pending += 1;
-    const live = account.credits.filter((c) => c.blocker !== 'expired');
-    if (live.length > 0) accountsWithCredits += 1;
-    for (const credit of live) {
-      banked += Math.max(1, credit.resets_left);
-      const at = expiresAtMs(credit);
-      if (at === null || at <= now) continue;
-      if (at - now <= LAPSE_SOON_MS) lapseSoon += 1;
-      if (!nextExpiry || at < nextExpiry.atMs) {
-        nextExpiry = { atMs: at, provider: account.provider, label: account.label };
-      }
-    }
-  }
-  return { banked, lapseSoon, nextExpiry, accountsWithCredits, pending };
+export function summaryOf(data: ResetsResponse | null | undefined): ResetsSummary {
+  const s = data?.summary;
+  const at = ms(s?.next_expiry?.at);
+  return {
+    banked: s?.banked ?? 0,
+    lapseSoon: s?.lapse_soon ?? 0,
+    accountsWithCredits: s?.accounts_with_credits ?? 0,
+    pending: s?.pending ?? 0,
+    nextExpiry:
+      s?.next_expiry && at !== null
+        ? { atMs: at, provider: s.next_expiry.provider, authId: s.next_expiry.auth_id }
+        : null,
+  };
 }
 
 // ---- timeline ----
@@ -193,7 +137,7 @@ export function buildTimeline(accounts: ResetAccount[], now: number): Timeline |
     credits.forEach((credit, index) => {
       const at = expiresAtMs(credit);
       if (at === null) return;
-      const v = creditVerdict(account, credit, now);
+      const v = creditVerdict(credit);
       const to = Math.min(at, endMs);
       if (to > lifeFrom) {
         markers.push({

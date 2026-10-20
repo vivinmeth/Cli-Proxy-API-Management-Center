@@ -17,7 +17,7 @@ import {
   creditVerdict,
   expiresAtMs,
   LOW_VALUE_PCT,
-  summarize,
+  summaryOf,
   timelinePct,
   type Verdict,
   type WindowGain,
@@ -80,7 +80,7 @@ export function ResetsSummaryCell() {
   const loading = useResetsStore((s) => s.loading);
   const error = useResetsStore((s) => s.error);
   const load = useResetsStore((s) => s.load);
-  const summary = useMemo(() => summarize(data?.accounts ?? [], now), [data, now]);
+  const summary = useMemo(() => summaryOf(data), [data]);
 
   if (!data?.enabled || summary.accountsWithCredits === 0) return null;
   const tickets = (data.accounts ?? []).flatMap((a) =>
@@ -565,7 +565,7 @@ export function ResetCreditDrawer({
           )}
           {credits.length === 0 && <li className={styles.muted}>{t('tmx_resets.none')}</li>}
           {credits.map((credit) => {
-            const v = creditVerdict(account, credit, now);
+            const v = creditVerdict(credit);
             const text = verdictText(t, v, account, (at) => relativeFn(at, now));
             const at = v.expiresAtMs;
             const urgent = at !== null && at - now <= 72 * 3_600_000;

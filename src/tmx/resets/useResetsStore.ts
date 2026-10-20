@@ -114,6 +114,8 @@ export const useResetsStore = create<ResetsState>((set, get) => ({
     }
     if (apiClient.getConnectionRevision() === revision) {
       set((state) => ({ results: { ...state.results, [account.auth_id]: result } }));
+      // The summary and the other credits' verdicts are server-computed: re-read the (cached) list.
+      if (result.state === 'done') void get().load(false);
     }
     return result;
   },

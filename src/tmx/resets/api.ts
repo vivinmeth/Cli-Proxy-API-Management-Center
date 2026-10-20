@@ -20,6 +20,27 @@ export interface ResetCredit {
   blocker?: string;
   /** Soft: allowed, but likely returns nothing. */
   warning?: string;
+  /** Server recommendation, computed per response. */
+  verdict?: ResetVerdict;
+}
+
+export interface ResetVerdict {
+  kind: 'pending' | 'blocked' | 'nothing' | 'use_now' | 'use_or_lose' | 'hold';
+  gains: { window: string; used_pct: number }[];
+  total_gain: number;
+  refill_at?: string;
+  lapses_before_refill: boolean;
+  lapses_soon: boolean;
+  /** The credit a redeem should target (soonest expiry without a blocker). */
+  spendable: boolean;
+}
+
+export interface ResetsSummary {
+  banked: number;
+  lapse_soon: number;
+  accounts_with_credits: number;
+  pending: number;
+  next_expiry: { at: string; auth_id: string; provider: string; credit_id: string } | null;
 }
 
 export interface ResetRedemption {
@@ -44,6 +65,7 @@ export interface ResetAccount {
   auth_index: string;
   provider: string;
   label: string;
+  plan: string;
   checked_at: string | null;
   error?: string;
   eligible: boolean;
@@ -59,6 +81,8 @@ export interface ResetAccount {
 
 export interface ResetsResponse {
   enabled: boolean;
+  generated_at?: string;
+  summary?: ResetsSummary;
   accounts: ResetAccount[];
   history: ResetRedemption[];
 }
@@ -77,10 +101,15 @@ export const resetsApi = {
       params: refresh ? { refresh: 1 } : undefined,
       timeout: 60_000,
     }),
+  poll: (authId: string) =>
+    apiClient.post<{ account: ResetAccount; throttled: boolean }>('/tmx/resets/poll', undefined, {
+      params: { auth_id: authId },
+      timeout: 60_000,
+    }),
   redeem: (authId: string, creditId: string) =>
     apiClient.post<RedeemResponse>(
       '/tmx/resets/redeem',
-      { auth_id: authId, credit_id: creditId },
+      { auth_id: authId, credit_id: creditId, actor: 'tmx-ui' },
       { timeout: REDEEM_TIMEOUT_MS }
     ),
 };

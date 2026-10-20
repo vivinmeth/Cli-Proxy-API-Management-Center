@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/icons';
 import { BRAND_LOGO, BRAND_NAME, BRAND_SHORT, BRAND_TAGLINE } from '@/tmx/brand';
 import { EnvPill } from '@/tmx/EnvPill';
+import { IconRequestHistory } from '@/tmx/requests/IconRequestHistory';
 import { useEnvDocumentTitle } from '@/tmx/useEnvDocumentTitle';
 import {
   useAuthStore,
@@ -66,6 +67,7 @@ const sidebarIcons: Record<string, ReactNode> = {
   pluginStore: <IconSidebarStore size={18} />,
   config: <IconSidebarConfig size={18} />,
   logs: <IconSidebarLogs size={18} />,
+  requests: <IconRequestHistory size={18} />,
   system: <IconSidebarSystem size={18} />,
 };
 
@@ -648,6 +650,12 @@ export function MainLayout() {
           labelKey: 'nav.quota_management',
           metaKey: 'nav_meta.quota_management',
           icon: sidebarIcons.quota,
+        },
+        {
+          path: '/requests',
+          labelKey: 'nav.request_history',
+          metaKey: 'nav_meta.request_history',
+          icon: sidebarIcons.requests,
         },
         {
           path: '/logs',

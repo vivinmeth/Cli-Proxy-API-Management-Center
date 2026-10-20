@@ -2347,6 +2347,20 @@
     "detail_client": "Client",
     "detail_session": "Session",
     "detail_tokens": "Tokens",
-    "detail_tokens_value": "{{input}} in · {{output}} out · {{read}} cache read · {{write}} cache write · {{reasoning}} reasoning"
+    "detail_tokens_value": "{{input}} in · {{output}} out · {{read}} cache read · {{write}} cache write · {{reasoning}} reasoning",
+    "storage_title": "Archive storage",
+    "storage_relist": "Re-list bucket",
+    "storage_no_r2": "This environment has no R2 bucket configured; archived content stays on local disk.",
+    "storage_objects": "Objects",
+    "storage_size": "Size",
+    "storage_cost_now": "Storage / month",
+    "storage_cost_now_hint": "Whole bucket, list price, free tier not deducted",
+    "storage_cost_12mo": "In 12 months",
+    "storage_cost_12mo_hint": "This environment at the last 30 days' pace · warns at {{warn}}",
+    "storage_env": "Environment",
+    "storage_packs": "Packs",
+    "storage_loose": "Single objects",
+    "storage_this_env": "this one",
+    "storage_listed": "Listed {{time}} · cached for an hour"
   }
 }

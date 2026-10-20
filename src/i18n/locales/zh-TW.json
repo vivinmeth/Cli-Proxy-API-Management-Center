@@ -550,7 +550,6 @@
     "reset_confirm_button": "確認重置",
     "reset_not_confirmed": "尚未確認額度重置成功，請重新整理額度後再決定是否重試。",
     "reset_cooldown_failed": "額度已重置，但代理冷卻清除失敗。請在原連線的認證檔案頁面使用「清除冷卻」，不要再次消耗重置卡。",
-
     "reset_success": "已重置「{{name}}」的 Codex 配額",
     "reset_failed": "重置「{{name}}」的 Codex 配額失敗：{{message}}",
     "plan_plus": "Plus",
@@ -2373,6 +2372,20 @@
     "detail_client": "用戶端",
     "detail_session": "工作階段",
     "detail_tokens": "Token",
-    "detail_tokens_value": "輸入 {{input}} · 輸出 {{output}} · 快取讀取 {{read}} · 快取寫入 {{write}} · 推理 {{reasoning}}"
+    "detail_tokens_value": "輸入 {{input}} · 輸出 {{output}} · 快取讀取 {{read}} · 快取寫入 {{write}} · 推理 {{reasoning}}",
+    "storage_title": "封存儲存空間",
+    "storage_relist": "重新列舉儲存桶",
+    "storage_no_r2": "此環境未設定 R2 儲存桶，封存內容保存在本機磁碟。",
+    "storage_objects": "物件數",
+    "storage_size": "大小",
+    "storage_cost_now": "每月儲存費用",
+    "storage_cost_now_hint": "整個儲存桶，以牌價計算，未扣除免費額度",
+    "storage_cost_12mo": "12 個月後",
+    "storage_cost_12mo_hint": "依本環境近 30 天的成長速度估算 · 超過 {{warn}} 時提醒",
+    "storage_env": "環境",
+    "storage_packs": "打包物件",
+    "storage_loose": "單獨物件",
+    "storage_this_env": "目前環境",
+    "storage_listed": "列舉於 {{time}} · 快取一小時"
   }
 }

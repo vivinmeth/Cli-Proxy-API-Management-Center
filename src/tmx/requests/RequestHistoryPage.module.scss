@@ -458,3 +458,8 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+// Archive storage card: tiles sit inside a card, so they need room above the table.
+.storageTiles {
+  margin-bottom: 14px;
+}

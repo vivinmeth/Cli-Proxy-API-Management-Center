@@ -15,6 +15,7 @@ import {
   type RequestSummary,
 } from './api';
 import { RequestChart } from './RequestChart';
+import { StoragePanel } from './StoragePanel';
 import styles from './RequestHistoryPage.module.scss';
 
 const RANGES = [
@@ -295,6 +296,8 @@ export function RequestHistoryPage() {
               </div>
             )}
           </section>
+
+          <StoragePanel connected={connected} />
         </>
       )}
     </div>

@@ -550,7 +550,6 @@
     "reset_confirm_button": "确认重置",
     "reset_not_confirmed": "未确认额度重置成功，请刷新额度后再决定是否重试。",
     "reset_cooldown_failed": "额度已重置，但代理冷却清除失败。请在原连接的认证文件页面使用“清除冷却”，不要再次消耗重置卡。",
-
     "reset_success": "已重置 \"{{name}}\" 的 Codex 额度",
     "reset_failed": "重置 \"{{name}}\" 的 Codex 额度失败：{{message}}",
     "plan_plus": "Plus",
@@ -2345,6 +2344,20 @@
     "detail_client": "客户端",
     "detail_session": "会话",
     "detail_tokens": "Token",
-    "detail_tokens_value": "输入 {{input}} · 输出 {{output}} · 缓存读取 {{read}} · 缓存写入 {{write}} · 推理 {{reasoning}}"
+    "detail_tokens_value": "输入 {{input}} · 输出 {{output}} · 缓存读取 {{read}} · 缓存写入 {{write}} · 推理 {{reasoning}}",
+    "storage_title": "归档存储",
+    "storage_relist": "重新列举存储桶",
+    "storage_no_r2": "此环境未配置 R2 存储桶，归档内容保存在本地磁盘。",
+    "storage_objects": "对象数",
+    "storage_size": "大小",
+    "storage_cost_now": "每月存储费用",
+    "storage_cost_now_hint": "整个存储桶，按标价计算，未扣除免费额度",
+    "storage_cost_12mo": "12 个月后",
+    "storage_cost_12mo_hint": "按本环境近 30 天的增速估算 · 超过 {{warn}} 时提醒",
+    "storage_env": "环境",
+    "storage_packs": "打包对象",
+    "storage_loose": "单独对象",
+    "storage_this_env": "当前环境",
+    "storage_listed": "列举于 {{time}} · 缓存一小时"
   }
 }

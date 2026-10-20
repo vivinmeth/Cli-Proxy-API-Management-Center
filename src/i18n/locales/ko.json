@@ -2347,6 +2347,20 @@
     "detail_client": "클라이언트",
     "detail_session": "세션",
     "detail_tokens": "토큰",
-    "detail_tokens_value": "입력 {{input}} · 출력 {{output}} · 캐시 읽기 {{read}} · 캐시 쓰기 {{write}} · 추론 {{reasoning}}"
+    "detail_tokens_value": "입력 {{input}} · 출력 {{output}} · 캐시 읽기 {{read}} · 캐시 쓰기 {{write}} · 추론 {{reasoning}}",
+    "storage_title": "아카이브 저장소",
+    "storage_relist": "버킷 다시 나열",
+    "storage_no_r2": "이 환경에는 R2 버킷이 설정되어 있지 않아 아카이브가 로컬 디스크에 저장됩니다.",
+    "storage_objects": "객체 수",
+    "storage_size": "크기",
+    "storage_cost_now": "월 저장 비용",
+    "storage_cost_now_hint": "버킷 전체, 정가 기준, 무료 한도 미차감",
+    "storage_cost_12mo": "12개월 후",
+    "storage_cost_12mo_hint": "이 환경의 최근 30일 증가 속도 기준 · {{warn}}에 도달하면 경고",
+    "storage_env": "환경",
+    "storage_packs": "팩",
+    "storage_loose": "개별 객체",
+    "storage_this_env": "현재",
+    "storage_listed": "{{time}}에 나열됨 · 1시간 캐시"
   }
 }

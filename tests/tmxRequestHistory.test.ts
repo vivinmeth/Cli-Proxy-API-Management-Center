@@ -22,3 +22,29 @@ describe('request history', () => {
     expect(cacheHitRatio({ prompt_tokens: 200, cache_hit_tokens: 150 })).toBe(0.75);
   });
 });
+
+import { formatUsd, storageRows, type StorageUsage } from '../src/tmx/requests/storage';
+
+describe('archive storage', () => {
+  const env = (bytes: number) => ({ objects: 1, bytes, packs: 1, pack_bytes: bytes, loose: 0, loose_bytes: 0 });
+  test('this environment first, then largest', () => {
+    const usage = {
+      by_env: { dev: env(5), prod: env(100), staging: env(10) },
+      this_env: 'staging',
+    } as unknown as StorageUsage;
+    expect(storageRows(usage).map((r) => [r.env, r.current])).toEqual([
+      ['staging', true],
+      ['prod', false],
+      ['dev', false],
+    ]);
+    expect(storageRows(undefined)).toEqual([]);
+  });
+
+  test('dollar formatting keeps tiny amounts honest', () => {
+    expect(formatUsd(0)).toBe('$0');
+    expect(formatUsd(0.004)).toBe('< $0.01');
+    expect(formatUsd(1.234)).toBe('$1.23');
+    expect(formatUsd(25.6)).toBe('$26');
+    expect(formatUsd(undefined)).toBe('—');
+  });
+});

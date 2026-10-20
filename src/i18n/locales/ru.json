@@ -2343,6 +2343,20 @@
     "detail_client": "Клиент",
     "detail_session": "Сессия",
     "detail_tokens": "Токены",
-    "detail_tokens_value": "вход {{input}} · выход {{output}} · чтение кэша {{read}} · запись в кэш {{write}} · рассуждение {{reasoning}}"
+    "detail_tokens_value": "вход {{input}} · выход {{output}} · чтение кэша {{read}} · запись в кэш {{write}} · рассуждение {{reasoning}}",
+    "storage_title": "Хранилище архива",
+    "storage_relist": "Пересчитать бакет",
+    "storage_no_r2": "Для этой среды бакет R2 не настроен; архив хранится на локальном диске.",
+    "storage_objects": "Объекты",
+    "storage_size": "Размер",
+    "storage_cost_now": "Хранение в месяц",
+    "storage_cost_now_hint": "Весь бакет по прейскуранту, без учёта бесплатного лимита",
+    "storage_cost_12mo": "Через 12 месяцев",
+    "storage_cost_12mo_hint": "Эта среда в темпе последних 30 дней · предупреждение при {{warn}}",
+    "storage_env": "Среда",
+    "storage_packs": "Пакеты",
+    "storage_loose": "Отдельные объекты",
+    "storage_this_env": "текущая",
+    "storage_listed": "Список получен {{time}} · кэш на час"
   }
 }

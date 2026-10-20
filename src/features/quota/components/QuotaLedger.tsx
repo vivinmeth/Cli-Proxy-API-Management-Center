@@ -12,7 +12,18 @@ import type { TFunction } from 'i18next';
 import { IconRefreshCw } from '@/components/ui/icons';
 import { useNow } from '@/hooks/useNow';
 import type { ResolvedTheme } from '@/types';
-import { formatInstantShort, formatRelativeInstant, resolveQuotaErrorMessage } from '@/utils/quota';
+import {
+  formatInstantShort,
+  formatRelativeInstant,
+  normalizeAuthIndex,
+  resolveQuotaErrorMessage,
+} from '@/utils/quota';
+import {
+  ResetCreditChip,
+  ResetCreditDrawer,
+  ResetsSummaryCell,
+  ResetsTimeline,
+} from '@/tmx/resets/ResetCredits';
 import { getQuotaCacheKey, getQuotaDisplayName } from '@/utils/quota/identity';
 import {
   getAuthFileIcon,
@@ -328,6 +339,7 @@ function LedgerRow({
     [entry.type, quota, primaryId]
   );
   const plan = planLabelFor(entry, quota, t);
+  const authIndex = normalizeAuthIndex(entry.file.auth_index ?? entry.file.authIndex);
 
   let body;
   if (status === 'idle') {
@@ -374,6 +386,7 @@ function LedgerRow({
           {name}
         </span>
         {plan && <span className={styles.plan}>{plan}</span>}
+        <ResetCreditChip authIndex={authIndex} name={name} />
       </div>
       <div className={styles.meters}>{body}</div>
       <div className={styles.rowActions}>
@@ -395,6 +408,7 @@ function LedgerRow({
           </button>
         )}
       </div>
+      <ResetCreditDrawer authIndex={authIndex} name={name} onRedeemed={onRefresh} />
     </li>
   );
 }
@@ -445,8 +459,10 @@ export function QuotaLedger(props: QuotaLedgerProps) {
               now={now}
             />
           ))}
+          <ResetsSummaryCell />
         </section>
       )}
+      <ResetsTimeline showEmails={showEmails} />
 
       <div className={styles.groups} aria-label={t('quota_management.ledger_rows_label')}>
         {rowGroups.map((group) => {

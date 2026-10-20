@@ -1,7 +1,7 @@
 // tokenmaxx fork: client for the persistent request log (/v8/management/tmx/requests*).
 import { apiClient } from '@/services/api/client';
 
-export type RequestOutcome = 'success' | 'failed' | 'canceled';
+export type RequestOutcome = 'success' | 'failed' | 'canceled' | 'rejected';
 
 export interface RequestCounts {
   attempts: number;
@@ -9,6 +9,8 @@ export interface RequestCounts {
   success: number;
   failed: number;
   canceled: number;
+  /** Refused before any account was tried; older backends omit it. */
+  rejected?: number;
   input_tokens: number;
   output_tokens: number;
   reasoning_tokens: number;

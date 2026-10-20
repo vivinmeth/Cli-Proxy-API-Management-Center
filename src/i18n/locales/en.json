@@ -2361,7 +2361,9 @@
     "storage_packs": "Packs",
     "storage_loose": "Single objects",
     "storage_this_env": "this one",
-    "storage_listed": "Listed {{time}} · cached for an hour"
+    "storage_listed": "Listed {{time}} · cached for an hour",
+    "outcome_rejected": "Rejected",
+    "rejected_hint": "Refused before any account was tried (bad key, unknown model, all accounts cooling down)"
   },
   "tmx_resets": {
     "title": "Reset credits",
@@ -2463,5 +2465,21 @@
     "outcome_auth_error": "login rejected",
     "outcome_rejected": "refused",
     "outcome_unknown": "no answer yet"
+  },
+  "tmx_quota_history": {
+    "title": "Quota history",
+    "subtitle": "Used % per window over time, as recorded by the proxy (traffic headers and polls). Dashed lines mark resets.",
+    "range": "History range",
+    "range_24h": "24h",
+    "range_7d": "7 days",
+    "range_30d": "30 days",
+    "reload": "Reload",
+    "empty": "No quota history recorded yet.",
+    "no_history": "No readings in this range yet.",
+    "stale": "stale",
+    "stale_hint": "This window has reset since the last reading; the value is no longer current",
+    "chart_label": "Quota used over time for {{account}}",
+    "len_hours": "{{n}}-hour",
+    "len_days": "{{n}}-day"
   }
 }

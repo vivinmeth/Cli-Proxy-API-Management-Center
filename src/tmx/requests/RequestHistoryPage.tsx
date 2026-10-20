@@ -27,7 +27,7 @@ const RANGES = [
 ] as const;
 type RangeId = (typeof RANGES)[number]['id'];
 
-const OUTCOME_FILTERS: ('' | RequestOutcome)[] = ['', 'failed', 'canceled', 'success'];
+const OUTCOME_FILTERS: ('' | RequestOutcome)[] = ['', 'failed', 'rejected', 'canceled', 'success'];
 
 const ratioText = (ratio: number | null) => (ratio === null ? '—' : formatPercent(ratio * 100));
 const msText = (ms: number) =>
@@ -174,6 +174,12 @@ export function RequestHistoryPage() {
               value={formatCompactNumber(totals?.canceled ?? 0)}
               hint={t('tmx_requests.canceled_hint')}
               tone="neutral"
+            />
+            <Tile
+              label={t('tmx_requests.outcome_rejected')}
+              value={formatCompactNumber(totals?.rejected ?? 0)}
+              hint={t('tmx_requests.rejected_hint')}
+              tone={totals?.rejected ? 'failure' : undefined}
             />
             <Tile
               label={t('tmx_requests.tile_cache')}

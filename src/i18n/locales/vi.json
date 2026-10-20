@@ -2367,7 +2367,9 @@
     "storage_packs": "Gói",
     "storage_loose": "Đối tượng riêng lẻ",
     "storage_this_env": "hiện tại",
-    "storage_listed": "Liệt kê lúc {{time}} · lưu đệm một giờ"
+    "storage_listed": "Liệt kê lúc {{time}} · lưu đệm một giờ",
+    "outcome_rejected": "Bị từ chối",
+    "rejected_hint": "Bị từ chối trước khi thử bất kỳ tài khoản nào (khóa sai, mô hình không xác định, mọi tài khoản đang tạm nghỉ)"
   },
   "tmx_resets": {
     "title": "Lượt đặt lại",
@@ -2469,5 +2471,21 @@
     "outcome_auth_error": "đăng nhập bị từ chối",
     "outcome_rejected": "bị từ chối",
     "outcome_unknown": "chưa có trả lời"
+  },
+  "tmx_quota_history": {
+    "title": "Lịch sử hạn mức",
+    "subtitle": "Phần trăm đã dùng của từng khung theo thời gian, do proxy ghi lại (header lưu lượng và thăm dò). Nét đứt là lúc đặt lại.",
+    "range": "Khoảng thời gian",
+    "range_24h": "24 giờ",
+    "range_7d": "7 ngày",
+    "range_30d": "30 ngày",
+    "reload": "Tải lại",
+    "empty": "Chưa ghi lại lịch sử hạn mức.",
+    "no_history": "Chưa có số liệu trong khoảng này.",
+    "stale": "cũ",
+    "stale_hint": "Khung này đã được đặt lại kể từ lần đọc cuối; giá trị không còn là hiện tại",
+    "chart_label": "Hạn mức đã dùng theo thời gian của {{account}}",
+    "len_hours": "{{n}} giờ",
+    "len_days": "{{n}} ngày"
   }
 }

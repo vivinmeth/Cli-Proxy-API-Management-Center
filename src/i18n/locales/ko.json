@@ -2361,7 +2361,9 @@
     "storage_packs": "팩",
     "storage_loose": "개별 객체",
     "storage_this_env": "현재",
-    "storage_listed": "{{time}}에 나열됨 · 1시간 캐시"
+    "storage_listed": "{{time}}에 나열됨 · 1시간 캐시",
+    "outcome_rejected": "거부됨",
+    "rejected_hint": "어떤 계정도 시도하기 전에 거부됨 (잘못된 키, 알 수 없는 모델, 모든 계정 대기 중)"
   },
   "tmx_resets": {
     "title": "리셋 크레딧",
@@ -2463,5 +2465,21 @@
     "outcome_auth_error": "로그인 거부",
     "outcome_rejected": "거부됨",
     "outcome_unknown": "응답 없음"
+  },
+  "tmx_quota_history": {
+    "title": "할당량 기록",
+    "subtitle": "프록시가 기록한 창별 사용률(%)의 변화 (트래픽 헤더와 폴링). 점선은 초기화 시점입니다.",
+    "range": "기록 범위",
+    "range_24h": "24시간",
+    "range_7d": "7일",
+    "range_30d": "30일",
+    "reload": "다시 불러오기",
+    "empty": "아직 기록된 할당량 기록이 없습니다.",
+    "no_history": "이 범위에는 아직 기록이 없습니다.",
+    "stale": "지난 값",
+    "stale_hint": "마지막 측정 이후 이 창이 초기화되어 현재 값이 아닙니다",
+    "chart_label": "{{account}}의 시간별 할당량 사용",
+    "len_hours": "{{n}}시간",
+    "len_days": "{{n}}일"
   }
 }

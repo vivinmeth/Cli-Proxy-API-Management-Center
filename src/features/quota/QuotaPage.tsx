@@ -26,6 +26,7 @@ import { ProviderTabs } from '@/features/authFiles/components/ProviderTabs';
 import { QuotaHeader } from './components/QuotaHeader';
 import { QuotaCard } from './components/QuotaCard';
 import { QuotaTimeline } from './components/QuotaTimeline';
+import { QuotaHistoryPanel } from '@/tmx/quotahistory/QuotaHistoryPanel';
 import { QuotaLedger } from './components/QuotaLedger';
 import { maskEmailsInText } from './emailMask';
 import {
@@ -536,6 +537,7 @@ export function QuotaPage() {
           }
           resolvedTheme={resolvedTheme}
         />
+        <QuotaHistoryPanel maskEmails={viewMode === 'ledger' && !showEmails} />
       </section>
     </div>
   );

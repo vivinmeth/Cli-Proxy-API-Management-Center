@@ -2358,7 +2358,9 @@
     "storage_packs": "打包对象",
     "storage_loose": "单独对象",
     "storage_this_env": "当前环境",
-    "storage_listed": "列举于 {{time}} · 缓存一小时"
+    "storage_listed": "列举于 {{time}} · 缓存一小时",
+    "outcome_rejected": "已拒绝",
+    "rejected_hint": "在尝试任何账号之前即被拒绝（密钥错误、未知模型、所有账号冷却中）"
   },
   "tmx_resets": {
     "title": "重置额度",
@@ -2460,5 +2462,21 @@
     "outcome_auth_error": "登录被拒",
     "outcome_rejected": "被拒绝",
     "outcome_unknown": "尚无答复"
+  },
+  "tmx_quota_history": {
+    "title": "额度历史",
+    "subtitle": "各时间窗口的已用百分比随时间变化，由代理记录（流量响应头与轮询）。虚线表示重置。",
+    "range": "历史范围",
+    "range_24h": "24 小时",
+    "range_7d": "7 天",
+    "range_30d": "30 天",
+    "reload": "重新加载",
+    "empty": "尚未记录额度历史。",
+    "no_history": "此范围内暂无记录。",
+    "stale": "已过期",
+    "stale_hint": "自上次读取后此窗口已重置，该值已不是当前值",
+    "chart_label": "{{account}} 的额度使用随时间变化",
+    "len_hours": "{{n}} 小时",
+    "len_days": "{{n}} 天"
   }
 }

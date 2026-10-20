@@ -1,0 +1,257 @@
+@use '../../styles/mixins' as *;
+
+// tokenmaxx fork: quota history charts (Quota Management).
+// Series colours: fixed slot order (5h, 7d, model weekly, other, other), validated with the dataviz
+// validator against --bg-primary in both themes. Light-mode slots 2-5 sit under 3:1 against the
+// card, so every chart carries a legend with each window's current value (relief rule).
+.root {
+  --qh-s0: #2a78d6;
+  --qh-s1: #eb6834;
+  --qh-s2: #1baf7a;
+  --qh-s3: #eda100;
+  --qh-s4: #e87ba4;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+:global([data-theme='dark']) .root {
+  --qh-s0: #3987e5;
+  --qh-s1: #d95926;
+  --qh-s2: #199e70;
+  --qh-s3: #c98500;
+  --qh-s4: #d55181;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+
+.segment,
+.segmentActive {
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background var(--dur-hover) var(--ease-out-strong);
+}
+
+.segmentActive {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 14px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-primary);
+}
+
+.cardHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.account {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  font-size: 11.5px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.legendValue {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.staleBadge {
+  padding: 0 5px;
+  border: 1px solid var(--border-primary);
+  border-radius: 4px;
+  color: var(--text-tertiary);
+  font-size: 10.5px;
+}
+
+.plot {
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  height: 150px;
+}
+
+.yAxis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 6px 0 0;
+  margin: -2px 0;
+  color: var(--text-tertiary);
+  font-size: 10.5px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.svgWrap {
+  position: relative;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.svg {
+  position: absolute;
+  // Inset so 0% and 100% lines don't sit on the baseline / card edge; the y labels match.
+  inset: 5px 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.gridLine {
+  stroke: var(--border-color);
+  stroke-dasharray: 3 4;
+  stroke-width: 1;
+}
+
+.resetLine {
+  stroke: var(--text-quaternary);
+  stroke-dasharray: 2 3;
+  stroke-width: 1;
+}
+
+.crosshair {
+  stroke: var(--text-tertiary);
+  stroke-width: 1;
+}
+
+.line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.xAxis {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 34px;
+  color: var(--text-tertiary);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tip {
+  position: absolute;
+  top: 4px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 160px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--floating-surface);
+  box-shadow: var(--floating-shadow);
+  color: var(--text-secondary);
+  font-size: 12px;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.tipTime {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.muted {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: 12.5px;
+}
+
+.error {
+  margin: 0;
+  color: var(--error-color);
+  font-size: 12.5px;
+}

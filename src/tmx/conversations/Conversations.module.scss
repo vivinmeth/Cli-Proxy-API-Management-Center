@@ -1,0 +1,280 @@
+@use '../../styles/mixins' as *;
+
+// tokenmaxx fork: Conversations page (session list + reader).
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+
+  @include mobile {
+    padding: 14px;
+  }
+}
+
+.title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 16px;
+  min-height: 0;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.list,
+.reader {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-primary);
+}
+
+.list {
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+
+  @include mobile {
+    max-height: 320px;
+  }
+}
+
+.listHead,
+.readerHead,
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.readerHead {
+  justify-content: space-between;
+}
+
+.readerTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.search,
+.select {
+  min-width: 0;
+  padding: 6px 9px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 12.5px;
+}
+
+.search {
+  flex: 1 1 140px;
+}
+
+.sessions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.session,
+.sessionActive {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-hover) var(--ease-out-strong);
+
+  &:hover {
+    background: var(--bg-tertiary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 1px;
+  }
+}
+
+.sessionActive {
+  border-color: var(--border-primary);
+  background: var(--bg-tertiary);
+}
+
+.sessionTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.badge {
+  padding: 1px 6px;
+  border: 1px solid var(--border-primary);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-size: 10.5px;
+}
+
+.sessionTime,
+.sessionMeta,
+.itemMeta {
+  color: var(--text-tertiary);
+  font-size: 11.5px;
+}
+
+.sessionId {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 9px 12px;
+  border: 1px solid var(--border-color);
+  border-left-width: 3px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+}
+
+.role_user {
+  border-left-color: var(--primary-color);
+}
+
+.role_assistant {
+  border-left-color: var(--success-color);
+}
+
+.role_tool,
+.kind_tool_call {
+  border-left-color: var(--quota-medium-color);
+}
+
+.role_system,
+.role_event,
+.kind_thinking {
+  border-left-color: var(--border-primary);
+}
+
+.itemHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.itemLabel {
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.prose,
+.code {
+  margin: 0;
+  overflow-x: auto;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.prose {
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.kind_thinking .prose,
+.kind_thinking .code {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.more {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.muted {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: 12.5px;
+}
+
+.error {
+  margin: 0;
+  color: var(--error-color);
+  font-size: 12.5px;
+}

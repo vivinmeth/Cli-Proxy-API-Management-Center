@@ -34,6 +34,7 @@ import {
 import { BRAND_LOGO, BRAND_NAME, BRAND_SHORT, BRAND_TAGLINE } from '@/tmx/brand';
 import { EnvPill } from '@/tmx/EnvPill';
 import { IconRequestHistory } from '@/tmx/requests/IconRequestHistory';
+import { IconConversations } from '@/tmx/conversations/IconConversations';
 import { useEnvDocumentTitle } from '@/tmx/useEnvDocumentTitle';
 import {
   useAuthStore,
@@ -68,6 +69,7 @@ const sidebarIcons: Record<string, ReactNode> = {
   config: <IconSidebarConfig size={18} />,
   logs: <IconSidebarLogs size={18} />,
   requests: <IconRequestHistory size={18} />,
+  conversations: <IconConversations size={18} />,
   system: <IconSidebarSystem size={18} />,
 };
 
@@ -656,6 +658,12 @@ export function MainLayout() {
           labelKey: 'nav.request_history',
           metaKey: 'nav_meta.request_history',
           icon: sidebarIcons.requests,
+        },
+        {
+          path: '/conversations',
+          labelKey: 'nav.conversations',
+          metaKey: 'nav_meta.conversations',
+          icon: sidebarIcons.conversations,
         },
         {
           path: '/logs',

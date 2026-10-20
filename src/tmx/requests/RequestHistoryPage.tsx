@@ -445,7 +445,15 @@ function RequestRow({
               <dt>{t('tmx_requests.trace')}</dt>
               <dd className={styles.mono}>{item.trace_id || '—'}</dd>
               <dt>{t('tmx_requests.detail_session')}</dt>
-              <dd className={styles.mono}>{item.session_id || '—'}</dd>
+              <dd className={styles.mono}>
+                {item.session_id ? (
+                  <a href={`#/conversations?session=${encodeURIComponent(item.session_id)}`}>
+                    {item.session_id}
+                  </a>
+                ) : (
+                  '—'
+                )}
+              </dd>
               <dt>{t('tmx_requests.detail_tokens')}</dt>
               <dd>
                 {t('tmx_requests.detail_tokens_value', {

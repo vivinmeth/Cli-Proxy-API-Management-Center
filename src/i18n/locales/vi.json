@@ -108,7 +108,8 @@
     "plugin_store": "Cửa hàng Plugin",
     "config_management": "Bảng cấu hình",
     "logs": "Trình xem Log",
-    "system_info": "Thông tin Trung tâm Quản lý"
+    "system_info": "Thông tin Trung tâm Quản lý",
+    "conversations": "Hội thoại"
   },
   "nav_groups": {
     "operate": "Vận hành",
@@ -129,7 +130,8 @@
     "plugin_store": "Khám phá & cài đặt plugin",
     "logs": "Truy vết yêu cầu",
     "config_management": "Cấu hình gateway",
-    "system_info": "Runtime & chẩn đoán"
+    "system_info": "Runtime & chẩn đoán",
+    "conversations": "Đọc phiên đã lưu"
   },
   "dashboard": {
     "hero_verdict_good": "Mọi hệ thống ổn định",
@@ -2487,5 +2489,45 @@
     "chart_label": "Hạn mức đã dùng theo thời gian của {{account}}",
     "len_hours": "{{n}} giờ",
     "len_days": "{{n}} ngày"
+  },
+  "tmx_conversations": {
+    "title": "Hội thoại",
+    "subtitle": "Đọc các phiên đã lưu: bản ghi nhập vào và lưu lượng do proxy ghi lại.",
+    "sessions": "Phiên",
+    "search": "Lọc theo phiên, công cụ, máy hoặc mô hình",
+    "range": "Phiên trong",
+    "last_days_one": "{{count}} ngày qua",
+    "last_days_other": "{{count}} ngày qua",
+    "no_sessions": "Không có phiên nào trong khoảng này.",
+    "reader": "Hội thoại",
+    "pick_title": "Chọn một phiên",
+    "pick_desc": "Chọn một phiên bên trái, hoặc mở từ Lịch sử yêu cầu.",
+    "kind_imported": "Bản ghi nhập vào",
+    "kind_proxy": "Do proxy ghi lại",
+    "items_one": "{{count}} mục",
+    "items_other": "{{count}} mục",
+    "turn": "Yêu cầu đã ghi",
+    "reload": "Tải lại",
+    "show": "Hiển thị",
+    "show_thinking": "Suy nghĩ",
+    "show_tools": "Gọi công cụ",
+    "show_system": "Lời nhắc hệ thống",
+    "show_events": "Sự kiện công cụ",
+    "loading": "Đang tải hội thoại… phiên dài mất vài giây ở lần đầu.",
+    "truncated": "Phiên rất dài: chỉ hiển thị một phần.",
+    "earlier_one": "Hiện {{count}} mục trước đó",
+    "earlier_other": "Hiện {{count}} mục trước đó",
+    "tool_call": "Gọi công cụ · {{name}}",
+    "tool_result": "Kết quả công cụ",
+    "thinking": "Suy nghĩ",
+    "role_system": "Hệ thống",
+    "role_user": "Người dùng",
+    "role_assistant": "Trợ lý",
+    "role_tool": "Công cụ",
+    "role_event": "Sự kiện",
+    "show_more_one": "Hiện thêm {{count}} ký tự",
+    "show_more_other": "Hiện thêm {{count}} ký tự",
+    "show_less": "Thu gọn",
+    "not_archived": "Phiên này chưa có nội dung lưu trữ: có thể nó có trước khi bật ghi lại, hoặc chỉ nhập mức sử dụng."
   }
 }

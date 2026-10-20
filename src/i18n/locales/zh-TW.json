@@ -108,7 +108,8 @@
     "plugin_store": "插件商店",
     "config_management": "設定面板",
     "logs": "記錄檢視",
-    "system_info": "中心資訊"
+    "system_info": "中心資訊",
+    "conversations": "對話"
   },
   "nav_groups": {
     "operate": "運行",
@@ -129,7 +130,8 @@
     "plugin_store": "探索並安裝插件",
     "logs": "請求追蹤與排查",
     "config_management": "閘道基礎設定",
-    "system_info": "運行與診斷資訊"
+    "system_info": "運行與診斷資訊",
+    "conversations": "閱讀封存的對話"
   },
   "dashboard": {
     "hero_verdict_good": "運行平穩",
@@ -2506,5 +2508,45 @@
     "chart_label": "{{account}} 的額度使用隨時間變化",
     "len_hours": "{{n}} 小時",
     "len_days": "{{n}} 天"
+  },
+  "tmx_conversations": {
+    "title": "對話",
+    "subtitle": "閱讀封存的對話：匯入的紀錄與代理擷取的流量。",
+    "sessions": "對話清單",
+    "search": "依對話、工具、機器或模型篩選",
+    "range": "對話時間範圍",
+    "last_days_one": "最近 {{count}} 天",
+    "last_days_other": "最近 {{count}} 天",
+    "no_sessions": "此範圍內沒有對話。",
+    "reader": "對話內容",
+    "pick_title": "選擇一個對話",
+    "pick_desc": "從左側選擇對話，或從請求歷史開啟。",
+    "kind_imported": "匯入的紀錄",
+    "kind_proxy": "代理擷取",
+    "items_one": "{{count}} 則",
+    "items_other": "{{count}} 則",
+    "turn": "擷取的請求",
+    "reload": "重新載入",
+    "show": "顯示",
+    "show_thinking": "思考過程",
+    "show_tools": "工具呼叫",
+    "show_system": "系統提示",
+    "show_events": "工具事件",
+    "loading": "正在載入對話… 長對話首次載入需要幾秒。",
+    "truncated": "對話很長，僅顯示部分內容。",
+    "earlier_one": "顯示更早的 {{count}} 則",
+    "earlier_other": "顯示更早的 {{count}} 則",
+    "tool_call": "工具呼叫 · {{name}}",
+    "tool_result": "工具結果",
+    "thinking": "思考",
+    "role_system": "系統",
+    "role_user": "使用者",
+    "role_assistant": "助理",
+    "role_tool": "工具",
+    "role_event": "事件",
+    "show_more_one": "再顯示 {{count}} 個字元",
+    "show_more_other": "再顯示 {{count}} 個字元",
+    "show_less": "收合",
+    "not_archived": "此對話尚無封存內容：可能早於擷取功能，或只匯入了用量。"
   }
 }

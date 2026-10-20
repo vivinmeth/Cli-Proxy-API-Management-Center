@@ -108,7 +108,8 @@
     "plugin_store": "플러그인 스토어",
     "config_management": "설정 패널",
     "logs": "로그 뷰어",
-    "system_info": "관리 센터 정보"
+    "system_info": "관리 센터 정보",
+    "conversations": "대화"
   },
   "nav_groups": {
     "operate": "운영",
@@ -129,7 +130,8 @@
     "plugin_store": "플러그인 탐색 및 설치",
     "logs": "요청 추적",
     "config_management": "게이트웨이 설정",
-    "system_info": "런타임 및 진단"
+    "system_info": "런타임 및 진단",
+    "conversations": "보관된 세션 읽기"
   },
   "dashboard": {
     "hero_verdict_good": "모든 시스템 정상",
@@ -2481,5 +2483,45 @@
     "chart_label": "{{account}}의 시간별 할당량 사용",
     "len_hours": "{{n}}시간",
     "len_days": "{{n}}일"
+  },
+  "tmx_conversations": {
+    "title": "대화",
+    "subtitle": "보관된 세션 읽기: 가져온 기록과 프록시가 기록한 트래픽.",
+    "sessions": "세션",
+    "search": "세션, 도구, 기기 또는 모델로 필터",
+    "range": "세션 기간",
+    "last_days_one": "최근 {{count}}일",
+    "last_days_other": "최근 {{count}}일",
+    "no_sessions": "이 기간에는 세션이 없습니다.",
+    "reader": "대화",
+    "pick_title": "세션을 선택하세요",
+    "pick_desc": "왼쪽에서 세션을 고르거나 요청 기록에서 여세요.",
+    "kind_imported": "가져온 기록",
+    "kind_proxy": "프록시가 기록함",
+    "items_one": "{{count}}개 항목",
+    "items_other": "{{count}}개 항목",
+    "turn": "기록된 요청",
+    "reload": "다시 불러오기",
+    "show": "표시",
+    "show_thinking": "생각",
+    "show_tools": "도구 호출",
+    "show_system": "시스템 프롬프트",
+    "show_events": "도구 이벤트",
+    "loading": "대화를 불러오는 중… 긴 세션은 처음에 몇 초 걸립니다.",
+    "truncated": "매우 긴 세션이라 일부만 표시합니다.",
+    "earlier_one": "이전 항목 {{count}}개 보기",
+    "earlier_other": "이전 항목 {{count}}개 보기",
+    "tool_call": "도구 호출 · {{name}}",
+    "tool_result": "도구 결과",
+    "thinking": "생각",
+    "role_system": "시스템",
+    "role_user": "사용자",
+    "role_assistant": "어시스턴트",
+    "role_tool": "도구",
+    "role_event": "이벤트",
+    "show_more_one": "{{count}}자 더 보기",
+    "show_more_other": "{{count}}자 더 보기",
+    "show_less": "접기",
+    "not_archived": "이 세션은 아직 보관된 내용이 없습니다. 기록 기능 이전의 세션이거나 사용량만 가져왔을 수 있습니다."
   }
 }

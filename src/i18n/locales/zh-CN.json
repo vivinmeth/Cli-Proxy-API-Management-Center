@@ -108,7 +108,8 @@
     "plugin_store": "插件商店",
     "config_management": "配置面板",
     "logs": "日志查看",
-    "system_info": "中心信息"
+    "system_info": "中心信息",
+    "conversations": "会话"
   },
   "nav_groups": {
     "operate": "运行",
@@ -129,7 +130,8 @@
     "plugin_store": "发现并安装插件",
     "logs": "请求追踪与排查",
     "config_management": "网关基础配置",
-    "system_info": "运行与诊断信息"
+    "system_info": "运行与诊断信息",
+    "conversations": "阅读归档会话"
   },
   "dashboard": {
     "hero_verdict_good": "运行平稳",
@@ -2478,5 +2480,45 @@
     "chart_label": "{{account}} 的额度使用随时间变化",
     "len_hours": "{{n}} 小时",
     "len_days": "{{n}} 天"
+  },
+  "tmx_conversations": {
+    "title": "会话",
+    "subtitle": "阅读归档的会话：导入的记录和代理捕获的流量。",
+    "sessions": "会话列表",
+    "search": "按会话、工具、机器或模型筛选",
+    "range": "会话时间范围",
+    "last_days_one": "最近 {{count}} 天",
+    "last_days_other": "最近 {{count}} 天",
+    "no_sessions": "此范围内没有会话。",
+    "reader": "会话内容",
+    "pick_title": "选择一个会话",
+    "pick_desc": "从左侧选择会话，或在请求历史中打开。",
+    "kind_imported": "导入的记录",
+    "kind_proxy": "代理捕获",
+    "items_one": "{{count}} 条",
+    "items_other": "{{count}} 条",
+    "turn": "捕获的请求",
+    "reload": "重新加载",
+    "show": "显示",
+    "show_thinking": "思考过程",
+    "show_tools": "工具调用",
+    "show_system": "系统提示",
+    "show_events": "工具事件",
+    "loading": "正在加载会话… 长会话首次加载需要几秒。",
+    "truncated": "会话很长，仅显示部分内容。",
+    "earlier_one": "显示更早的 {{count}} 条",
+    "earlier_other": "显示更早的 {{count}} 条",
+    "tool_call": "工具调用 · {{name}}",
+    "tool_result": "工具结果",
+    "thinking": "思考",
+    "role_system": "系统",
+    "role_user": "用户",
+    "role_assistant": "助手",
+    "role_tool": "工具",
+    "role_event": "事件",
+    "show_more_one": "再显示 {{count}} 个字符",
+    "show_more_other": "再显示 {{count}} 个字符",
+    "show_less": "收起",
+    "not_archived": "此会话尚无归档内容：可能早于捕获功能，或只导入了用量。"
   }
 }

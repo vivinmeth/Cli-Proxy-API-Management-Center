@@ -108,7 +108,8 @@
     "plugin_store": "Plugin Store",
     "config_management": "Config Panel",
     "logs": "Logs Viewer",
-    "system_info": "Management Center Info"
+    "system_info": "Management Center Info",
+    "conversations": "Conversations"
   },
   "nav_groups": {
     "operate": "Operate",
@@ -129,7 +130,8 @@
     "plugin_store": "Discover & install plugins",
     "logs": "Request tracing",
     "config_management": "Gateway configuration",
-    "system_info": "Runtime & diagnostics"
+    "system_info": "Runtime & diagnostics",
+    "conversations": "Read archived sessions"
   },
   "dashboard": {
     "hero_verdict_good": "All systems steady",
@@ -2481,5 +2483,45 @@
     "chart_label": "Quota used over time for {{account}}",
     "len_hours": "{{n}}-hour",
     "len_days": "{{n}}-day"
+  },
+  "tmx_conversations": {
+    "title": "Conversations",
+    "subtitle": "Read archived sessions: imported transcripts and traffic captured by the proxy.",
+    "sessions": "Sessions",
+    "search": "Filter by session, harness, machine or model",
+    "range": "Sessions from",
+    "last_days_one": "Last {{count}} day",
+    "last_days_other": "Last {{count}} days",
+    "no_sessions": "No sessions in this range.",
+    "reader": "Conversation",
+    "pick_title": "Pick a session",
+    "pick_desc": "Choose a session on the left, or open one from Request History.",
+    "kind_imported": "Imported transcript",
+    "kind_proxy": "Captured by the proxy",
+    "items_one": "{{count}} item",
+    "items_other": "{{count}} items",
+    "turn": "Captured request",
+    "reload": "Reload",
+    "show": "Show",
+    "show_thinking": "Thinking",
+    "show_tools": "Tool calls",
+    "show_system": "System prompts",
+    "show_events": "Harness events",
+    "loading": "Loading conversation… long sessions take a few seconds the first time.",
+    "truncated": "Very long session: only part of it is shown.",
+    "earlier_one": "Show {{count}} earlier item",
+    "earlier_other": "Show {{count}} earlier items",
+    "tool_call": "Tool call · {{name}}",
+    "tool_result": "Tool result",
+    "thinking": "Thinking",
+    "role_system": "System",
+    "role_user": "User",
+    "role_assistant": "Assistant",
+    "role_tool": "Tool",
+    "role_event": "Event",
+    "show_more_one": "Show {{count}} more character",
+    "show_more_other": "Show {{count}} more characters",
+    "show_less": "Show less",
+    "not_archived": "Nothing is archived for this session yet: it may predate capture, or only its usage was imported."
   }
 }

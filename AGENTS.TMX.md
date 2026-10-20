@@ -32,7 +32,9 @@ T3 project exist but are **parked**. Don't work there; see `../wiki/parked-fork-
   backend's `/v8/management/tmx/requests*`. Strings under `tmx_requests.*` in all 6 locales.
 - **Reset credits** on the Ledger (`src/tmx/resets/`: summary cell, pending-resets timeline, row
   chip + drawer, confirm dialog): reads `/v8/management/tmx/resets`, renders nothing when the
-  backend lacks it. `QuotaLedger.tsx` only carries the mount points. Strings under `tmx_resets.*`
+  backend lacks it. Verdicts and the summary come from the backend (shared with fleet); don't
+  recompute them here, `model.ts` only adapts them and lays out the timeline. `QuotaLedger.tsx`
+  only carries the mount points. Strings under `tmx_resets.*`
   in all 6 locales; logic tests in `tests/tmxResets.test.ts`. Cards view keeps upstream's reset UI.
   Details: `../wiki/reset-credits.md`.
 - Details: `../wiki/ui-ledger-and-releases.md`, `../wiki/observability-plan.md`.

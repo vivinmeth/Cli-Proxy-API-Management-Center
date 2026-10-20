@@ -1016,6 +1016,13 @@ export function MainLayout() {
           >
             {sidebarOpen ? headerIcons.close : headerIcons.menu}
           </Button>
+          <span className="mobile-brand" title={BRAND_NAME}>
+            <img src={BRAND_LOGO} alt="" className="mobile-brand-logo" />
+            <span className="mobile-brand-text">
+              <span className="mobile-brand-title">{BRAND_SHORT}</span>
+              <EnvPill />
+            </span>
+          </span>
         </div>
 
         <div className="header-actions floating-actions">

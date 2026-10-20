@@ -26,13 +26,18 @@ import { ProviderTabs } from '@/features/authFiles/components/ProviderTabs';
 import { QuotaHeader } from './components/QuotaHeader';
 import { QuotaCard } from './components/QuotaCard';
 import { QuotaTimeline } from './components/QuotaTimeline';
+import { QuotaLedger } from './components/QuotaLedger';
+import { maskEmailsInText } from './emailMask';
 import {
   CARD_ENTRANCE_BUDGET_MS,
+  DEFAULT_QUOTA_VIEW_MODE,
   QUOTA_PAGE_SIZE,
   QUOTA_SORT_MODES,
   QUOTA_TAB_ORDER,
+  QUOTA_VIEW_MODES,
   type QuotaSortMode,
   type QuotaTabId,
+  type QuotaViewMode,
 } from './constants';
 import {
   buildTabCounts,
@@ -61,6 +66,8 @@ const SKELETON_CARD_COUNT = 6;
  * identity-aware display label. Keep the filename fallback stable for memoization.
  */
 const displayNameFor = (name: string) => name;
+/** Ledger hides emails by default; the timeline below it follows the same toggle. */
+const maskedDisplayNameFor = (name: string) => maskEmailsInText(name);
 
 export function QuotaPage() {
   const { t } = useTranslation();
@@ -73,6 +80,12 @@ export function QuotaPage() {
   const [tab, setTab] = useState<QuotaTabId>(() => readQuotaUiState()?.tab ?? 'all');
   const [sortMode, setSortMode] = useState<QuotaSortMode>(
     () => readQuotaUiState()?.sortMode ?? 'default'
+  );
+  const [viewMode, setViewMode] = useState<QuotaViewMode>(
+    () => readQuotaUiState()?.viewMode ?? DEFAULT_QUOTA_VIEW_MODE
+  );
+  const [showEmails, setShowEmails] = useState<boolean>(
+    () => readQuotaUiState()?.showEmails ?? false
   );
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -210,6 +223,24 @@ export function QuotaPage() {
     writeQuotaUiState({ sortMode: next as QuotaSortMode });
   }, []);
 
+  const handleViewModeChange = useCallback((next: string) => {
+    setViewMode(next as QuotaViewMode);
+    writeQuotaUiState({ viewMode: next as QuotaViewMode });
+  }, []);
+
+  const handleToggleEmails = useCallback(() => {
+    setShowEmails((current) => {
+      writeQuotaUiState({ showEmails: !current });
+      return !current;
+    });
+  }, []);
+
+  const viewOptions = useMemo(
+    () =>
+      QUOTA_VIEW_MODES.map((mode) => ({ value: mode, label: t(`quota_management.view_${mode}`) })),
+    [t]
+  );
+
   const sortOptions = useMemo(
     () =>
       QUOTA_SORT_MODES.map((mode) => ({ value: mode, label: t(`quota_management.sort_${mode}`) })),
@@ -299,6 +330,11 @@ export function QuotaPage() {
     loadQuota
   );
 
+  const handleRefreshEntry = useCallback(
+    (entry: QuotaFileEntry) => void refreshQuota(entry.file, QUOTA_ADAPTERS[entry.type]),
+    [refreshQuota]
+  );
+
   const canUseActions = !disableControls && !loading && filesGeneration === sessionGeneration;
 
   /* ---------- 首屏卡片一次性级联入场 ----------
@@ -332,6 +368,8 @@ export function QuotaPage() {
         refreshing={loading || batchLoading}
         disableControls={disableControls}
         onRefreshAll={handleRefreshAll}
+        showEmails={showEmails}
+        onToggleEmails={viewMode === 'ledger' ? handleToggleEmails : undefined}
       />
 
       <section className={styles.workbench}>
@@ -344,6 +382,15 @@ export function QuotaPage() {
             resolvedTheme={resolvedTheme}
             onChange={handleTabChange}
           />
+          <div className={styles.viewMode}>
+            <Select
+              value={viewMode}
+              options={viewOptions}
+              onChange={handleViewModeChange}
+              ariaLabel={t('quota_management.view_label')}
+              size="sm"
+            />
+          </div>
         </div>
 
         <div className={styles.toolbar}>
@@ -424,6 +471,16 @@ export function QuotaPage() {
               )
             }
           />
+        ) : viewMode === 'ledger' ? (
+          <QuotaLedger
+            summaryEntries={filteredEntries}
+            rowEntries={pageItems}
+            quotaFor={getQuota}
+            resolvedTheme={resolvedTheme}
+            showEmails={showEmails}
+            canRefresh={canUseActions}
+            onRefresh={handleRefreshEntry}
+          />
         ) : (
           <div className={styles.grid}>
             {pageItems.map((entry, index) => (
@@ -474,7 +531,9 @@ export function QuotaPage() {
         <QuotaTimeline
           entries={pageItems}
           quotaFor={getQuota}
-          displayNameFor={displayNameFor}
+          displayNameFor={
+            viewMode === 'ledger' && !showEmails ? maskedDisplayNameFor : displayNameFor
+          }
           resolvedTheme={resolvedTheme}
         />
       </section>

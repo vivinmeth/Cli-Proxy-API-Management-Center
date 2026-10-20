@@ -7,6 +7,7 @@
  */
 
 import { afterAll, beforeEach, describe, expect, test } from 'bun:test';
+import { DEFAULT_QUOTA_VIEW_MODE } from '@/features/quota/constants';
 import { readQuotaUiState, writeQuotaUiState } from '@/features/quota/uiState';
 
 const KEY = 'quotaPage.uiState';
@@ -61,6 +62,30 @@ describe('quota ui state', () => {
     writeQuotaUiState({ tab: 'kimi' });
 
     expect(readQuotaUiState()).toEqual({ tab: 'kimi', sortMode: 'soonest' });
+  });
+
+  test('persists the view mode and email toggle alongside the other preferences', () => {
+    writeQuotaUiState({ tab: 'claude', sortMode: 'soonest' });
+    writeQuotaUiState({ viewMode: 'cards' });
+    writeQuotaUiState({ showEmails: true });
+
+    expect(readQuotaUiState()).toEqual({
+      tab: 'claude',
+      sortMode: 'soonest',
+      viewMode: 'cards',
+      showEmails: true,
+    });
+
+    writeQuotaUiState({ viewMode: 'ledger', showEmails: false });
+    expect(readQuotaUiState()).toMatchObject({ viewMode: 'ledger', showEmails: false });
+  });
+
+  test('defaults to the ledger view and drops unknown view modes', () => {
+    expect(DEFAULT_QUOTA_VIEW_MODE).toBe('ledger');
+    storage.setItem(KEY, JSON.stringify({ viewMode: 'spreadsheet', showEmails: 'yes' }));
+    const state = readQuotaUiState();
+    expect(state?.viewMode).toBeUndefined();
+    expect(state?.showEmails).toBeUndefined();
   });
 
   test('rejects values that are not part of the current contract', () => {

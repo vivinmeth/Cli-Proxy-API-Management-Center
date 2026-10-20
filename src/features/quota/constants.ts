@@ -22,5 +22,16 @@ export const QUOTA_SORT_MODES = ['default', 'soonest'] as const;
 
 export type QuotaSortMode = (typeof QUOTA_SORT_MODES)[number];
 
+/** 页面视图：ledger = 汇总条 + 按 provider 分组的紧凑行（默认）；cards = 卡片网格。 */
+export const QUOTA_VIEW_MODES = ['ledger', 'cards'] as const;
+
+export type QuotaViewMode = (typeof QUOTA_VIEW_MODES)[number];
+
+export const DEFAULT_QUOTA_VIEW_MODE: QuotaViewMode = 'ledger';
+
+/** 水位三档阈值（剩余 ≥70 绿 / ≥30 琥珀 / <30 红），卡片水位条与 ledger 共用。 */
+export const QUOTA_PROGRESS_HIGH_THRESHOLD = 70;
+export const QUOTA_PROGRESS_MEDIUM_THRESHOLD = 30;
+
 /** 与 useRevealGroup 的 GROUP_MAX_TOTAL 一致：卡片级联总预算 360ms。 */
 export const CARD_ENTRANCE_BUDGET_MS = 360;

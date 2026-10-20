@@ -36,6 +36,11 @@
   }
 }
 
+.viewMode {
+  flex: 0 0 auto;
+  min-width: 132px;
+}
+
 .toolbar {
   display: flex;
   align-items: center;

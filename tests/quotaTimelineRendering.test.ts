@@ -161,4 +161,30 @@ describe('QuotaTimeline rendering', () => {
 
     expect(markup).toBe('');
   });
+
+  test('window bars use the in-app tooltip, not a native title that can get stuck', () => {
+    const markup = renderToStaticMarkup(
+      createElement(QuotaTimeline, {
+        ...baseProps,
+        quotaFor: () => ({
+          status: 'success',
+          windows: [
+            {
+              label: '7-day',
+              usedPercent: 25,
+              resetAtMs: new Date(2026, 7, 1, 12).getTime(),
+              periodHours: 168,
+            },
+          ],
+        }),
+      })
+    );
+    // CSS-module class names are undefined under bun test; bars are the positioned divs.
+    const bars = markup.match(/<div [^>]*style="left:[^;"]*;width:[^"]*"[^>]*>/g) ?? [];
+    expect(bars.length).toBeGreaterThan(0);
+    for (const bar of bars) {
+      expect(bar).not.toContain(' title=');
+      expect(bar).toContain('aria-label="weekly-only.json, ');
+    }
+  });
 });

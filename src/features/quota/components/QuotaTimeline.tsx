@@ -31,6 +31,7 @@ import type { TimelineLane, TimelineMode } from '../quotaTimelineModel';
 import type { QuotaFileEntry } from '../logic';
 import type { QuotaCardState } from '../providers';
 import styles from './QuotaTimeline.module.scss';
+import { useHoverTip } from './HoverTip';
 
 const WEEKDAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
@@ -320,6 +321,7 @@ interface LaneProps {
 
 function Lane({ lane, span, now, mode, cells, nowPercent, resolvedTheme }: LaneProps) {
   const { t, i18n } = useTranslation();
+  const hoverTip = useHoverTip();
 
   const windows = useMemo(
     () => projectLane(lane, span.startMs, span.endMs, now, mode),
@@ -357,8 +359,7 @@ function Lane({ lane, span, now, mode, cells, nowPercent, resolvedTheme }: LaneP
         <div className={styles.laneLimits}>
           {lane.limits.map((limit) => (
             <span key={limit.label} className={styles.laneLimit}>
-              {lane.provider === 'meta' ? t(limit.label) : limit.label}{' '}
-              <b>{limit.remaining}%</b>
+              {lane.provider === 'meta' ? t(limit.label) : limit.label} <b>{limit.remaining}%</b>
             </span>
           ))}
         </div>
@@ -400,11 +401,13 @@ function Lane({ lane, span, now, mode, cells, nowPercent, resolvedTheme }: LaneP
                 key={window.startMs}
                 className={`${styles.window} ${styles[`window${capitalize(window.state)}`]}`}
                 style={{ left: `${window.leftPercent}%`, width: `${window.widthPercent}%` }}
-                title={`${lane.displayName}\n${formatDay(window.startMs)} ${formatTime(
-                  window.startMs
-                )} → ${formatDay(window.endMs)} ${formatTime(window.endMs)}${
-                  window.remaining !== null ? `\n${window.remaining}% remaining` : ''
-                }`}
+                {...hoverTip.bind(
+                  `${lane.displayName}\n${formatDay(window.startMs)} ${formatTime(
+                    window.startMs
+                  )} → ${formatDay(window.endMs)} ${formatTime(window.endMs)}${
+                    window.remaining !== null ? `\n${window.remaining}% remaining` : ''
+                  }`
+                )}
               >
                 {/* Only the API-reported current window has meaningful usage;
                     projected windows intentionally have no fill. */}
@@ -448,13 +451,13 @@ function Lane({ lane, span, now, mode, cells, nowPercent, resolvedTheme }: LaneP
               key={credit.id || `${credit.expiresAtMs}-${index}`}
               className={styles.resetCreditTick}
               style={{ left: `${credit.leftPercent}%` }}
-              title={title}
               role="img"
-              aria-label={title.split('\n').join(', ')}
+              {...hoverTip.bind(title)}
             />
           );
         })}
       </div>
+      {hoverTip.element}
     </div>
   );
 }

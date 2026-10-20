@@ -28,7 +28,9 @@ T3 project exist but are **parked**. Don't work there; see `../wiki/parked-fork-
   names are not translated; upstream's "CLI Proxy API" strings that refer to the backend stay.
 - Claude summary card leads with the 5-hour + general 7-day windows (`LEDGER_HEADLINE_WINDOWS`);
   Fable and other model-scoped buckets sit in the collapsed extras.
-- Details: `../wiki/ui-ledger-and-releases.md`.
+- **Request History** page (`src/tmx/requests/`, route `/requests`, Observe group): reads the
+  backend's `/v8/management/tmx/requests*`. Strings under `tmx_requests.*` in all 6 locales.
+- Details: `../wiki/ui-ledger-and-releases.md`, `../wiki/observability-plan.md`.
 
 ## Git
 

@@ -70,4 +70,6 @@ Maintain shared repository guidance in `AGENTS.md`. When updating it, synchroniz
 
 ## Fork-local guidance (tokenmaxx)
 
-This is the `vivinmeth` fork. Also read `AGENTS.TMX.md` before making changes; it adds fork-only rules and overrides this file where they conflict.
+Kind: code · Shape: single · Stack: react · Git mode: trunk
+
+This is the `vivinmeth` fork. Also read `AGENTS.TMX.md` before making changes; it holds the fork's map, checks and rules, and overrides this file where they conflict.
